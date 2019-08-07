@@ -1,6 +1,7 @@
 #lang typed/racket
 
-(struct instruction ([first : Integer] [second : Integer] [third : Integer] [fourth : Integer]) #:transparent)
+(require "structs.rkt")
+(provide (prefix-out debug/ (all-defined-out)))
 
 ; Registers
 (struct V ([at : Integer]) #:transparent)
@@ -79,8 +80,8 @@
     [(instruction #xF x #x1 #xE) (ADD (I) (V x))]
     [(instruction #xF x #x2 #x9) (LD 'F (V x))]
     [(instruction #xF x #x3 #x3) (LD 'B (V x))]
-    [(instruction #xF x #x5 #x5) (LD (I) (build-list x V))]
-    [(instruction #xF x #x6 #x5) (LD (build-list x V) (I))]
+    [(instruction #xF x #x5 #x5) (LD (I) (build-list (add1 x) (lambda (x) (V x))))]
+    [(instruction #xF x #x6 #x5) (LD (build-list (add1 x) (lambda (x) (V x))) (I))]
     [x (BAD x)]))
 
 ; disassembles from the current input port
